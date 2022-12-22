@@ -1,4 +1,4 @@
-# Explaining "http.rs"
+# Explaining the `get` method on `http.rs`
 
 ```rust
 let neighbor_cache = NeighborCache::new(BTreeMap::new());
@@ -21,3 +21,34 @@ let tcp_socket = TcpSocket::new(tcp_rx_buffer, tcp_tx_buffer);
 ```
 
 These sentences are strightforward. 2 buffers are defined and provided during creation of the TCP socket as required. `TcpSocketBuffer` is a type definition to `RingBuffer`.
+
+---
+
+```rust
+  let ip_addrs = [IpCidr::new(IpAddress::v4(192, 168, 42, 1), 24)];
+
+  let fd = tap.as_raw_fd();
+  let mut routes = Routes::new(BTreeMap::new());
+  let default_gateway = Ipv4Address::new(192, 168, 42, 100);
+  routes.add_default_ipv4_route(default_gateway).unwrap();
+  let mut iface = EthernetInterfaceBuilder::new(tap)
+    .ethernet_addr(mac)
+    .neighbor_cache(neighbor_cache)
+    .ip_addrs(ip_addrs)
+    .routes(routes)
+    .finalize();
+```
+
+These lines are responsible for building the `EthernetInterface` entity, except for `let fd = tap.as_raw_fd();`, which is going to be used later on a call to `phy_wait()`. 
+
+`192.168.42.1` is assigned to this interface. It is in the range configured on the kernel firewall by `sudo iptables -t nat -A POSTROUTING -s 192.168.42.0/24 -j MASQUERADE`.
+
+`192.168.42.100` is the default gateway since it was the IP assigned to the virtual device by `sudo ip addr add 192.168.42.100/24 dev tap-rust`.
+
+The `route` vairbale consists of a **route table**. We add `default_gateway` as the default route, that is, traffic `0.0.0.0/0` is handled by it. This addition might also be achieved by the command line:
+
+```bash
+ip route add 0.0.0.0/0 via 192.168.42.100
+```
+---
+
