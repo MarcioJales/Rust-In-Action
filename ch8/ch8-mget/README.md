@@ -18,9 +18,15 @@ I assume that the use of `BTreeMap` is due to its (good) performance as a cache 
 let tcp_rx_buffer = TcpSocketBuffer::new(vec![0; 1024]);
 let tcp_tx_buffer = TcpSocketBuffer::new(vec![0; 1024]);
 let tcp_socket = TcpSocket::new(tcp_rx_buffer, tcp_tx_buffer);
+
+...
+...
+
+let mut sockets = SocketSet::new(vec![]);
+let tcp_handle = sockets.add(tcp_socket);
 ```
 
-These sentences are strightforward. 2 buffers are defined and provided during creation of the TCP socket as required. `TcpSocketBuffer` is a type definition to `RingBuffer`.
+These sentences are strightforward. 2 buffers are defined and provided during creation of the TCP socket as required. `TcpSocketBuffer` is a type definition to `RingBuffer`. In the end, a handle is created from the addition of the TCP socket to a `SocketSet`. I don't know why this concept of "a set of sockets" exists. Anyway, there isn't such Struct in the new versinon (0.8.2) in `smoltcp`.
 
 ---
 
