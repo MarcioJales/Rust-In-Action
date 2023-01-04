@@ -51,10 +51,12 @@ These lines are responsible for building the `EthernetInterface` entity, except 
 
 `192.168.42.100` is the default gateway since it was the IP assigned to the virtual device by `sudo ip addr add 192.168.42.100/24 dev tap-rust`.
 
-The `route` vairbale consists of a **route table**. We add `default_gateway` as the default route, that is, traffic `0.0.0.0/0` is handled by it. This addition might also be achieved by the command line:
+The `route` variable consists of a **route table**. We add `default_gateway` as the default route, that is, traffic `0.0.0.0/0` is handled by it. This addition might also be achieved by the command line:
 
 ```bash
 ip route add 0.0.0.0/0 via 192.168.42.100
 ```
+
+And what is the effect of all these methods on `EthernetInterfaceBuilder`? Let's check in order:
 ---
 
