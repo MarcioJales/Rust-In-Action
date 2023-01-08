@@ -51,13 +51,9 @@ These lines are responsible for building the `EthernetInterface` entity, except 
 
 `192.168.42.100` is the default gateway since it was the IP assigned to the virtual device by `sudo ip addr add 192.168.42.100/24 dev tap-rust`.
 
-The `route` variable consists of a **route table**. We add `default_gateway` as the default route, that is, traffic `0.0.0.0/0` is handled by it. This addition might also be achieved by the command line:
+The `route` variable consists of a **route table**. We add `default_gateway` as the default route, that is, traffic `0.0.0.0/0` is handled by it.
 
-```bash
-ip route add 0.0.0.0/0 via 192.168.42.100
-```
-
-When building the intereface with `EthernetInterfaceBuilder`, a list of IP addresses (in this case, only `192.168.42.1`) is associated to it, but I do not see why this is necessary, since `192.168.42.100` is already linked to this interface at `setup.sh`. Interestingly enough, the command `ip addr list tap-rust` doesn't display any `192.168.42.1` while the program is running. Neither `routes` nor `ethernet_mac` seem to reflect changes on the device. On the other hand, `neighbot_cache` shows a new entry, thus being the only configuration reflecting changes.
+When building the interface with `EthernetInterfaceBuilder`, a list of IP addresses (in this case, only `192.168.42.1`) is associated to it, but I can't see why this is necessary, since `192.168.42.100` is already linked to this interface at `setup.sh`. Interestingly enough, the command `ip addr list tap-rust` doesn't display any `192.168.42.1` while the program is running. Neither `routes` nor `ethernet_mac` seem to reflect changes on the device. On the other hand, `neighbot_cache` shows a new entry, thus being the only configuration reflecting changes.
 
 ---
 
