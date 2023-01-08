@@ -57,6 +57,7 @@ The `route` variable consists of a **route table**. We add `default_gateway` as 
 ip route add 0.0.0.0/0 via 192.168.42.100
 ```
 
-And what is the effect of all these methods on `EthernetInterfaceBuilder`? Let's check in order:
+When building the intereface with `EthernetInterfaceBuilder`, a list of IP addresses (in this case, only `192.168.42.1`) is associated to it, but I do not see why this is necessary, since `192.168.42.100` is already linked to this interface at `setup.sh`. Interestingly enough, the command `ip addr list tap-rust` doesn't display any `192.168.42.1` while the program is running. Neither `routes` nor `ethernet_mac` seem to reflect changes on the device. On the other hand, `neighbot_cache` shows a new entry, thus being the only configuration reflecting changes.
+
 ---
 
