@@ -77,7 +77,7 @@ pub fn get(
   let tcp_handle = sockets.add(tcp_socket);
 
   let http_header = format!(
-    "GET {} HTTP/1.0\r\nHost: {}\r\nConnection: close\r\n\r\n",
+    "GET {} HTTP/1.1\r\nHost: {}\r\nConnection: close\r\n\r\n",
     url.path(),
     domain_name,
   );
@@ -96,6 +96,8 @@ pub fn get(
     {
       let mut socket = sockets.get::<TcpSocket>(tcp_handle);
 
+      /* Connection state hangs on SYN_SENT phase */
+      /* I've tried to use tap-rust with curl and it has worked. This indicates that the problem is on the application */
       state = match state {
         HttpState::Connect if !socket.is_active() => {
           eprintln!("connecting");
